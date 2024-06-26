@@ -1,0 +1,45 @@
+.chart {
+    -fx-background-color: #f4f4f4; /* Light grey background */
+    -fx-padding: 20px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+}
+
+.axis {
+    -fx-tick-label-fill: #333; /* Dark grey tick labels */
+    -fx-tick-mark-length: 0;
+    -fx-tick-label-font-size: 12px;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-text-fill: blue; /* Dark grey legend text */
+    -fx-font-size: 12px;
+}
+
+.chart-title {
+    -fx-text-fill: #333; /* Dark grey title */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.chart-series-line {
+    -fx-stroke-width: 2px; /* Thicker lines */
+}
+
+.default-color0.chart-line-symbol {
+    -fx-background-color: #1f77b4, white; /* Blue with white border */
+    -fx-background-insets: 0, 1;
+}
+
+.default-color1.chart-line-symbol {
+    -fx-background-color: #ff7f0e, white; /* Orange with white border */
+    -fx-background-insets: 0, 1;
+}
+
+.default-color2.chart-line-symbol {
+    -fx-background-color: #2ca02c, white; /* Green with white border */
+    -fx-background-insets: 0, 1;
+}
+.default-color0.chart-series-line { -fx-stroke: black; }
+.default-color1.chart-series-line { -fx-stroke: black; }

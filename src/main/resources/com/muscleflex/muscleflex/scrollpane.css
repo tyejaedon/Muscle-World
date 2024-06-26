@@ -1,0 +1,33 @@
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #333333; /* Dark grey for the track */
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #FFD700; /* Gold for the thumb */
+    -fx-background-radius: 5px;
+    -fx-background-insets: 2px;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-min-height: 20px; /* Minimum height for vertical thumb */
+}
+
+.scroll-bar:horizontal .thumb {
+    -fx-min-width: 20px; /* Minimum width for horizontal thumb */
+}

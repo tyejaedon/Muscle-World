@@ -1,9 +1,11 @@
 package com.muscleflex.muscleflex;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
@@ -13,6 +15,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.Objects;
 
 public class Homepage extends Application {
 
@@ -36,8 +41,45 @@ public class Homepage extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Gym Application Homepage");
+        primaryStage.setTitle("Homepage");
+// config for create plan muscle view and start workout
+        HBox homebox = new HBox();
+        FontIcon plan = new FontIcon(FontAwesomeSolid.BOOK);
+        plan.setIconSize(40);
+        plan.setIconColor(Color.WHITE);
+        createPlan.setGraphic(plan);
+        createPlan.setBackground(Background.fill(Color.BLACK));
+        createPlan.setAlignment(Pos.CENTER);
 
+        createPlan.setPrefSize(150,80);
+        homebox.getChildren().add(createPlan);
+        homebox.setSpacing(2);
+
+
+        muscle.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/muscleflex/muscleflex/muscular.png")))));
+        muscle.setAlignment(Pos.CENTER);
+        muscle.setBackground(Background.fill(Color.BLACK));
+        muscle.setPrefSize(150,80);
+        homebox.getChildren().addAll(muscle);
+
+
+        FontIcon letsgo = new FontIcon(FontAwesomeSolid.DUMBBELL);
+        letsgo.setIconSize(40);
+        letsgo.setIconColor(Color.WHITE);
+        startWorkout.setGraphic(letsgo);
+        startWorkout.setAlignment(Pos.CENTER);
+        startWorkout.setBackground(Background.fill(Color.BLACK));
+        startWorkout.setPrefSize(150,80);
+        homebox.getChildren().addAll(startWorkout);
+        homebox.setAlignment(Pos.CENTER);
+        homebox.setSpacing(10);
+        homebox.setPadding(new Insets(70,0,0,0));
+        Line line = new Line();
+        line.setStartX(0);
+        line.setEndX(448);
+
+        line.setStroke(Color.GOLD);
+        line.setStrokeWidth(5);
         // Top panel configuration
         HBox topPanel = new HBox();
         topPanel.setPadding(new Insets(10));
@@ -61,7 +103,7 @@ public class Homepage extends Application {
         changingPanel.setSpacing(1);
 
 
-        changingPanel.setStyle("-fx-background-radius: 25px;-fx-border-style:solid;-fx-background-color:grey;");
+        changingPanel.setStyle("-fx-background-radius: 25px;-fx-border-style:solid;-fx-background-color:white;");
         changingPanel.setPrefSize(480,500);
         // Allow changing panel to grow vertically
         VBox.setVgrow(changingPanel,Priority.ALWAYS);
@@ -71,9 +113,27 @@ public class Homepage extends Application {
             WorkoutPlanCreator exCreator = new WorkoutPlanCreator();
             changingPanel.getChildren().clear();
             changingPanel.setBackground(Background.fill(Color.GREY));
-            changingPanel.setStyle("-fx-background-radius: 25px;-fx-border-style:solid;-fx-background-color:grey;");
+            changingPanel.setStyle("-fx-background-radius: 25px;-fx-border-style:solid;-fx-background-color:white;");
 
             changingPanel.getChildren().add(exCreator);
+        });
+        workoutButton.setOnAction(e->{
+           homebox.getChildren().clear();
+           homebox.getChildren().addAll(createPlan,muscle,startWorkout);
+            changingPanel.getChildren().clear();
+            changingPanel.setStyle("-fx-background-color:white; -fx-background-radius:25px;-fx-border-style:solid;");
+
+            changingPanel.getChildren().add(new WorkoutPlanCreator());
+        });
+        dashboardButton.setOnAction(e -> {
+            changingPanel.getChildren().clear();
+            homebox.getChildren().clear();
+            Dashboard dashboard = new Dashboard();
+
+
+            homebox.getChildren().add(dashboard.exerciseSelection());
+            changingPanel.setStyle("-fx-background-color:white; -fx-background-radius:25px;-fx-border-style:solid;");
+            changingPanel.getChildren().add(dashboard);
         });
         muscle.setOnAction(e -> {
             MuscleView muscleView = new MuscleView();
@@ -81,7 +141,7 @@ public class Homepage extends Application {
 
 
             changingPanel.getChildren().clear();
-            changingPanel.setBackground(Background.fill(Color.BLACK));
+            changingPanel.setStyle("-fx-background-radius: 25px;-fx-border-style:solid;-fx-background-color:black;");
             changingPanel.getChildren().add(muscleView);
         });
 
@@ -93,46 +153,7 @@ public class Homepage extends Application {
 
 
 
-// config for create plan muscle view and start workout
-        HBox homebox = new HBox();
-        FontIcon plan = new FontIcon(FontAwesomeSolid.BOOK);
-        plan.setIconSize(40);
-        plan.setIconColor(Color.WHITE);
-        createPlan.setGraphic(plan);
-        createPlan.setBackground(Background.fill(Color.BLACK));
-        createPlan.setAlignment(Pos.CENTER);
 
-        createPlan.setPrefSize(150,80);
-        homebox.getChildren().add(createPlan);
-        homebox.setSpacing(2);
-
-        FontIcon pump = new FontIcon(FontAwesomeSolid.DUMBBELL);
-        pump.setIconSize(40);
-        pump.setIconColor(Color.WHITE);
-        muscle.setGraphic(pump);
-        muscle.setAlignment(Pos.CENTER);
-        muscle.setBackground(Background.fill(Color.BLACK));
-        muscle.setPrefSize(150,80);
-        homebox.getChildren().addAll(muscle);
-
-
-        FontIcon letsgo = new FontIcon(FontAwesomeSolid.RUNNING);
-        letsgo.setIconSize(40);
-        letsgo.setIconColor(Color.WHITE);
-        startWorkout.setGraphic(letsgo);
-        startWorkout.setAlignment(Pos.CENTER);
-        startWorkout.setBackground(Background.fill(Color.BLACK));
-        startWorkout.setPrefSize(150,80);
-        homebox.getChildren().addAll(startWorkout);
-        homebox.setAlignment(Pos.CENTER);
-        homebox.setSpacing(10);
-        homebox.setPadding(new Insets(70,0,0,0));
-        Line line = new Line();
-        line.setStartX(0);
-        line.setEndX(448);
-
-        line.setStroke(Color.GOLD);
-        line.setStrokeWidth(5);
 
 
 

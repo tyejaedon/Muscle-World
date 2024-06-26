@@ -77,12 +77,12 @@ public class MuscleView extends VBox {
         imagePane.getChildren().add(bodyImageView);
 
         // Add interactive areas
-        Circle chestArea = createMuscleArea(150, 80, 15, "Chest");
-        Circle backArea = createMuscleArea(150, 80, 25, "Back");
-        Circle legsArea = createMuscleArea(150, 240, 25, "Legs");
+        Circle chestArea = createMuscleArea(120, 70, 20, "Chest");
+        Circle backArea = createMuscleArea(320, 100, 25, "Back");
+        Circle legsArea = createMuscleArea(150, 190, 25, "Legs");
         Circle armsArea = createMuscleArea(75, 95, 15, "Arms");
-        Circle shouldersArea = createMuscleArea(150, 55, 20, "Shoulders");
-        Circle absArea = createMuscleArea(150, 150, 20, "Abs");
+        Circle shouldersArea = createMuscleArea(150, 55, 10, "Shoulders");
+        Circle absArea = createMuscleArea(130, 110, 20, "Abs");
 
         // Add components to the pane
         imagePane.getChildren().addAll(chestArea, backArea, legsArea, armsArea, shouldersArea, absArea);

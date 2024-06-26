@@ -1,0 +1,63 @@
+.tab-pane {  /* Style for the entire TabPane */
+   /* Set background color */
+            /* Set border width */
+  -fx-background-radius: 30px;
+            /* Add rounded corners */
+}
+.tab-header-background {
+    -fx-background-color: white ;
+    -fx-background-radius:30px;
+}
+
+.tab {  /* Style for all tabs */
+  -fx-font-family: Arial;  /* Set font family */
+  -fx-font-size: 14px;
+      /* Set font size */
+     -fx-text-base-color:gold;
+    -fx-background-radius:20px;
+
+  -fx-background-color:black; /* Set text color */
+
+}
+
+.tab:selected {  /* Style for selected tab */
+  -fx-text-base-color: black;  /* Change text color on selection */
+  -fx-background-color: gold; /* Change background color on selection */
+}
+/* ComboBox styling */
+.combo-box {
+    -fx-background-color: black; /* Background color */
+    -fx-border-color: gold; /* Border color */
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+/* Arrow button styling */
+.combo-box .arrow-button {
+    -fx-background-color: gold;
+    -fx-padding: 5px;
+}
+
+/* List cell styling */
+.combo-box .list-cell {
+    -fx-text-fill: black; /* Text color */
+    -fx-padding: 5px 10px;
+}
+
+/* Hover effect */
+.combo-box .list-cell:hover {
+    -fx-background-color: gold; /* Hover background color */
+}
+
+/* Selected item */
+.combo-box .list-cell:selected {
+    -fx-background-color: black; /* Selected background color */
+    -fx-text-fill: white; /* Selected text color */
+}
+
+/* Popup */
+.combo-box .combo-box-popup .list-view {
+    -fx-background-color: #ffffff; /* Popup background color */
+    -fx-padding: 5px;
+}
