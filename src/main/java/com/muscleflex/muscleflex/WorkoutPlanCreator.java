@@ -10,7 +10,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -26,24 +29,26 @@ public class WorkoutPlanCreator extends VBox {
     TextField planNameField = new TextField();
     Button addButton = new Button("Add Exercise");
     Button saveButton = new Button("Save Plan");
-
+    DatabaseConnector db = DatabaseConnector.getInstance();
     // Exercise map to store exercises by day
     Map<String, ArrayList<String>> exerciseMap = new HashMap<>();
 
     public WorkoutPlanCreator() {
         setupUI();
         setupListeners();
+
     }
 
     private void setupUI() {
         FontIcon icon = new FontIcon(FontAwesomeSolid.SAVE);
         setSpacing(20);
-
-
+dayComboBox.getItems().addAll("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday");
         // Initialize combo boxes and date picker
-        exerciseField.getItems().addAll("Squats", "Lunges", "Leg Press", "Deadlifts", "Leg Curls", "Calf Raises");
-        dayComboBox.getItems().addAll("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
-        targetMuscleGrp.getItems().addAll("Legs", "Arms", "Chest", "Back", "Full Body", "Push", "Pull", "Abs");
+        if(targetMuscleGrp.getValue() == null){
+          populateExercises();
+
+        }
+
 
         // Main form setup
         VBox formPanel = new VBox(15);
@@ -117,40 +122,55 @@ public class WorkoutPlanCreator extends VBox {
         addButton.setOnAction(e -> addExercise());
 
         // Save plan button action
-        saveButton.setOnAction(e -> savePlan());
+        saveButton.setOnAction(e ->{ String[][] sample_exercises = savePlan();
+        String temp_planname = planNameField.getText();
+        String temp_target = targetField.getText();
+        LocalDate temp_date =  endDatePicker.getValue();
+        Boolean success = false;
+        if (temp_planname != null && temp_target != null && temp_date != null) {
+            DatabaseConnector dbConnector = DatabaseConnector.getInstance();
+            success = dbConnector.addPlan(sample_exercises, temp_planname, temp_target, temp_date);
+        }
+
+        if (success) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success ");
+            alert.setContentText(planNameField+" Has been added!");
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Failure");
+            alert.setContentText("Something went Wrong!");
+        } });
     }
+
 
     private void populateExercises() {
         String selectedGroup = targetMuscleGrp.getValue();
-        switch (selectedGroup) {
-            case "Legs":
-                exerciseField.getItems().setAll("Squats", "Lunges", "Leg Press", "Deadlifts", "Leg Curls", "Calf Raises");
-                break;
-            case "Chest":
-                exerciseField.getItems().setAll("Bench Press", "Incline Dumbbell Press", "Push-Ups", "Chest Flys", "Cable Crossovers", "Dips");
-                break;
-            case "Back":
-                exerciseField.getItems().setAll("Pull-Ups", "Bent Over Rows", "Lat Pulldowns", "Deadlifts", "T-Bar Rows", "Seated Cable Rows");
-                break;
-            case "Arms":
-                exerciseField.getItems().setAll("Bicep Curls", "Tricep Dips", "Hammer Curls", "Tricep Extensions", "Concentration Curls", "Skull Crushers");
-                break;
-            case "Push":
-                exerciseField.getItems().setAll("Bench Press", "Overhead Press", "Push-Ups", "Dips", "Incline Press", "Tricep Pushdowns");
-                break;
-            case "Pull":
-                exerciseField.getItems().setAll("Pull-Ups", "Bent Over Rows", "Lat Pulldowns", "Face Pulls", "Deadlifts", "Dumbbell Rows");
-                break;
-            case "Abs":
-                exerciseField.getItems().setAll("Crunches", "Leg Raises", "Russian Twists", "Planks", "Bicycle Crunches", "Mountain Climbers");
-                break;
-            default:
-                exerciseField.getItems().clear();
-                break;
+        HashMap<String, List<String> >muscleExercises  = db.getAllExercises();;
+        exerciseField.getItems().clear();
+        if (selectedGroup != null) {
+
+            for (String X : muscleExercises.get(selectedGroup)) {
+                exerciseField.getItems().addAll(X);
+
+
+            }
         }
+                // Set default value if items are populated
+                if (targetMuscleGrp.getItems().isEmpty()) {
+                    for (Map.Entry<String, List<String>> X : muscleExercises.entrySet()) {
+                        targetMuscleGrp.getItems().addAll(X.getKey());
+
+
+
+
+                }
+            }
+
     }
 
-    private void addExercise() {
+            private void addExercise() {
         String exercise = exerciseField.getValue();
         String day = dayComboBox.getValue();
 
@@ -171,44 +191,25 @@ public class WorkoutPlanCreator extends VBox {
         exerciseList.setText(sb.toString());
     }
 
-    private void savePlan() {
-        String[][] savedExercises = new String[exerciseMap.size()][];
-        int index = 0;
-        for (String day : exerciseMap.keySet()) {
-            ArrayList<String> exercises = exerciseMap.get(day);
-            savedExercises[index] = new String[exercises.size() + 1];
-            savedExercises[index][0] = day;
-            for (int i = 0; i < exercises.size(); i++) {
-                savedExercises[index][i + 1] = exercises.get(i);
+    private String[][] savePlan() {
+        String[][] savedexercises = new String[exerciseMap.size()][];
+        for (String string : exerciseMap.keySet()) {
+            ArrayList<String> value = exerciseMap.get(string);
+
+            for (int i = 0; i < savedexercises.length; i++) {
+                savedexercises[i] = new String[value.size()+1];
+                savedexercises[i][0] = string;
+
+                for (int j = 1; j < value.size(); j++) {
+
+                    savedexercises[i][j] = value.get(j);
+
+                }
             }
-            index++;
         }
+    clearForm();
 
-        String planName = planNameField.getText();
-        String target = targetField.getText();
-        Date endDate = java.sql.Date.valueOf(endDatePicker.getValue());
-
-        if (planName.isEmpty() || target.isEmpty() || endDate == null || savedExercises.length == 0) {
-            // Validation failed
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Validation Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Please fill in all fields and add at least one exercise.");
-            alert.showAndWait();
-        } else {
-            // Save plan logic (database connection would typically be here)
-            // For demonstration, just printing details
-            System.out.println("Plan Name: " + planName);
-            System.out.println("Target: " + target);
-            System.out.println("End Date: " + new SimpleDateFormat("dd-MM-yyyy").format(endDate));
-            System.out.println("Exercises:");
-            for (String[] dayExercises : savedExercises) {
-                System.out.println(dayExercises[0] + ": " + Arrays.toString(Arrays.copyOfRange(dayExercises, 1, dayExercises.length)));
-            }
-
-            // Clear form after saving
-            clearForm();
-        }
+        return savedexercises;
     }
 
     private void clearForm() {

@@ -122,6 +122,12 @@
             <artifactId>ikonli-fontawesome5-pack</artifactId>
             <version>12.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.28</version> <!-- Replace with the latest version -->
+        </dependency>
+
     </dependencies>
 
 

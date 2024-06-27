@@ -2,72 +2,49 @@ package com.muscleflex.muscleflex;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
+import javafx.event.ActionEvent;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class Dashboard extends HBox {
-    private ComboBox<String> bodyPartComboBox;
-    private ComboBox<String> exerciseComboBox;
-    private Map<String, Map<String, XYChart.Series<Number, Number>>> exerciseData;
+
+
+
+
     private LineChart<Number, Number> exerciseChart;
     XYChart.Series<Number, Number> weight;
     LineChart<Number,Number> weightChart;
+
+    List<Map<String, Object>> userMuscleData;
+    List<Map<String, Object>> userExerciseData;
+    private ComboBox<String> bodyPartComboBox = new ComboBox<>();
+    private Map<String, Map<String, XYChart.Series<Number, Number>>>  exerciseData = new HashMap<>();
+    private ComboBox<String>  WorkoutPlans = new ComboBox<>();
+    private ComboBox<String> exerciseComboBox = new ComboBox<>();
+    DatabaseConnector db= DatabaseConnector.getInstance();
     public Dashboard() {
+        updateCombox(null);
         initializeData();
+
         initializeUI();
+
     }
 
     private void initializeData() {
-        exerciseData = new HashMap<>();
+        exerciseChart  =createLineChart("Exercise Chart", "Weight", 31, 0);
+        // Initialize ComboBoxes
 
-        // Chest exercises data
-        Map<String, XYChart.Series<Number, Number>> chestExercises = new HashMap<>();
-        XYChart.Series<Number, Number> benchPress = new XYChart.Series<>();
-        benchPress.setName("Bench Press");
-        benchPress.getData().add(new XYChart.Data<>(1, 100));
-        benchPress.getData().add(new XYChart.Data<>(2, 110));
-        benchPress.getData().add(new XYChart.Data<>(3, 120));
-        benchPress.getData().add(new XYChart.Data<>(4, 190));
-        chestExercises.put("Bench Press", benchPress);
+        // Initalizing chart
 
-        XYChart.Series<Number, Number> chestFly = new XYChart.Series<>();
-        chestFly.setName("Chest Fly");
-        chestFly.getData().add(new XYChart.Data<>(1, 50));
-        chestFly.getData().add(new XYChart.Data<>(2, 55));
-        chestFly.getData().add(new XYChart.Data<>(3, 60));
-
-        chestExercises.put("Chest Fly", chestFly);
-
-        exerciseData.put("Chest", chestExercises);
-
-        // Legs exercises data
-        Map<String, XYChart.Series<Number, Number>> legsExercises = new HashMap<>();
-        XYChart.Series<Number, Number> squat = new XYChart.Series<>();
-        squat.setName("Squat");
-        squat.getData().add(new XYChart.Data<>(1, 120));
-        squat.getData().add(new XYChart.Data<>(2, 130));
-        squat.getData().add(new XYChart.Data<>(3, 140));
-        legsExercises.put("Squat", squat);
-
-        XYChart.Series<Number, Number> legPress = new XYChart.Series<>();
-        legPress.setName("Leg Press");
-        legPress.getData().add(new XYChart.Data<>(1, 200));
-        legPress.getData().add(new XYChart.Data<>(2, 210));
-        legPress.getData().add(new XYChart.Data<>(3, 220));
-        legsExercises.put("Leg Press", legPress);
-
-        exerciseData.put("Legs", legsExercises);
 
         //weight chart demo:
         weight = new XYChart.Series<>();
@@ -76,37 +53,35 @@ public class Dashboard extends HBox {
         weight.getData().add(new XYChart.Data<>(2, 85));
         weight.getData().add(new XYChart.Data<>(3, 87));
 
+
+
+
+
+
+
     }
 
     private void initializeUI() {
    weightChart = createLineChart("Weight & BMI","Weight",31,0);
-
-        exerciseChart  =createLineChart("Exercise Chart", "Weight", 31, 0);
-        // Initialize ComboBoxes
-        bodyPartComboBox = new ComboBox<>();
-        bodyPartComboBox.getItems().addAll(exerciseData.keySet());
+        WorkoutPlans.setOnAction(e->{
+            updateCombox(e);
+        });
 
 
-        bodyPartComboBox.setOnAction(e -> updateExerciseComboBox());
+        bodyPartComboBox.setOnAction(e->{
+            updateCombox(e);
+        });
 
-        exerciseComboBox = new ComboBox<>();
-
-        // Populate exerciseComboBox with exercises for "Chest"
-        String initialBodyPart = bodyPartComboBox.getSelectionModel().getSelectedItem();
-
-        if (initialBodyPart == null) {
-            // Select "Chest" by default
-
-            bodyPartComboBox.setValue("Chest");
-            exerciseComboBox.getItems().addAll(exerciseData.get("Chest").keySet());
-            // Select "Bench Press" by default for "Chest"'
-            exerciseComboBox.setValue(exerciseComboBox.getItems().getFirst());
-            updateChart();
-
-        }
         exerciseComboBox.setOnAction(e->{
             updateChart();
         });
+
+
+
+
+
+
+
 
 
 
@@ -135,12 +110,13 @@ public class Dashboard extends HBox {
         tabPane.getTabs().addAll(strengthTab,weightTab,workoutTab());
 
 
+
         // Link to the external stylesheet
         String stylesheet = Objects.requireNonNull(getClass().getResource("/com/muscleflex/muscleflex/dashboard.css")).toExternalForm();
         tabPane.getStylesheets().add(stylesheet);
 
         // Add components to the HBox
-        getChildren().addAll( tabPane);
+        getChildren().addAll(tabPane);
 
     }
 
@@ -150,23 +126,35 @@ public class Dashboard extends HBox {
 
     bodyPartComboBox.getStylesheets().add(stylesheet);
     exerciseComboBox.getStylesheets().add(stylesheet);
+    WorkoutPlans.getStylesheets().add(stylesheet);
+
     Label muscleGroup = new Label("Target Muscle Group: ");
         Label exercise = new Label("Exercise: ");
         muscleGroup.setStyle("-fx-text-fill: white;" +
                 "-fx-font-family: cursive;" +
                 "-fx-font-style:italic;" +
                 "-fx-margin-top:5px;" +
-                "-fx-font-size:15px;"
+                "-fx-font-size:8px;"
+        );
+
+        Label plan_label = new Label("Exercise: ");
+        plan_label.setStyle("-fx-text-fill: white;" +
+                "-fx-font-family: cursive;" +
+                "-fx-font-style:italic;" +
+                "-fx-margin-top:5px;" +
+                "-fx-font-size:8px;"
         );
         exercise.setStyle("-fx-text-fill: white;" +
                 "-fx-font-family: cursive;" +
                 "-fx-font-style:italic;" +
-                "-fx-font-size:15px");
+                "-fx-font-size:8px");
     GridPane box = new GridPane();
-    box.add(muscleGroup,0,0);
-    box.add(bodyPartComboBox,1,0);
-    box.add(exercise,2,0);
-    box.add(exerciseComboBox,3,0);
+    box.add(plan_label,0,0);
+    box.add(WorkoutPlans,1,0);
+    box.add(muscleGroup,2,0);
+    box.add(bodyPartComboBox,3,0);
+    box.add(exercise,4,0);
+    box.add(exerciseComboBox,5,0);
     box.setHgap(10);
 
 
@@ -175,14 +163,70 @@ public class Dashboard extends HBox {
         return box;
     }
 
-    private void updateExerciseComboBox() {
 
-        String selectedBodyPart = bodyPartComboBox.getSelectionModel().getSelectedItem();
-        if (selectedBodyPart != null) {
+    private void updateCombox(ActionEvent e) {
+
+
             exerciseComboBox.getItems().clear();
-            exerciseComboBox.getItems().addAll(exerciseData.get(selectedBodyPart).keySet());
+
+        //the real stuff
+        db.getUserData(db.getLoggedUser());
+        List<Map<String, Object>> workout_info = db.getWorkoutPlans();
+        if (WorkoutPlans.getItems().isEmpty()){
+            workout_info.forEach((k)->{
+                Object x =  k.get("plan_name");
+
+                WorkoutPlans.getItems().addAll(x.toString());
+            });
         }
+
+        if (WorkoutPlans.getSelectionModel().getSelectedItem() == null){
+            WorkoutPlans.setValue(WorkoutPlans.getItems().getFirst());
+            userMuscleData = db.getWorkoutData(db.getLoggedUser(),WorkoutPlans.getItems().getFirst());
+
+        } else if(e.equals(WorkoutPlans)) {
+            userMuscleData = db.getWorkoutData(db.getLoggedUser(),WorkoutPlans.getSelectionModel().getSelectedItem());
+            bodyPartComboBox.getItems().clear();
+        }
+
+
+
+        if (bodyPartComboBox.getItems().isEmpty()){
+            userMuscleData.forEach((k)->{
+                Object y = k.get("target_muscle");
+                if (!bodyPartComboBox.getItems().contains(y.toString())){
+                    bodyPartComboBox.getItems().addAll(y.toString());
+
+                }
+            });
+            exerciseComboBox.getItems().clear();
+        }
+
+
+        if (bodyPartComboBox.getSelectionModel().getSelectedItem() == null){
+            bodyPartComboBox.setValue(bodyPartComboBox.getItems().getFirst());
+
+        }
+            userExerciseData = db.getWorkoutData(db.getLoggedUser(),WorkoutPlans.getSelectionModel().getSelectedItem(),bodyPartComboBox.getSelectionModel().getSelectedItem());
+
+
+
+
+        userExerciseData.forEach((k)->{
+            Object y = k.get("exercise_name");
+            if (!exerciseComboBox.getItems().contains(y.toString())){
+                exerciseComboBox.getItems().addAll(y.toString());
+                System.out.println(k.get("exercise_name"));
+            }
+
+
+
+        });
+
     }
+
+
+
 private  LineChart<Number,Number> updateWeightChart(){
 
         double maxX = weight.getData().stream()
@@ -214,12 +258,19 @@ private  LineChart<Number,Number> updateWeightChart(){
     }
 
     private void updateChart() {
+        String selectedPlan = WorkoutPlans.getSelectionModel().getSelectedItem();
         String selectedBodyPart = bodyPartComboBox.getSelectionModel().getSelectedItem();
         String selectedExercise = exerciseComboBox.getSelectionModel().getSelectedItem();
+        List<Map<String, Object>> graphData = db.getWorkoutData(db.getLoggedUser(),selectedPlan);
+        graphData.forEach(k->{
 
+        });
         if (selectedBodyPart != null && selectedExercise != null) {
             // Clear existing data from the chart
-            exerciseChart.getData().clear();
+            if (!exerciseChart.getData().isEmpty()){
+                exerciseChart.getData().clear();
+            }
+
 
 
             XYChart.Series<Number, Number> series = exerciseData.get(selectedBodyPart).get(selectedExercise);

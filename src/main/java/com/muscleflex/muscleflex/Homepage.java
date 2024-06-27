@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class Homepage extends Application {
+public class Homepage extends VBox {
 
     GridPane mainPanel = new GridPane();
     VBox tasksPanel = new VBox(); // Changed to VBox for a list-like behavior
@@ -35,13 +35,10 @@ public class Homepage extends Application {
     ListView<String> taskListView = new ListView<>(); // ListView for dynamic tasks
     ObservableList<String> tasksList = FXCollections.observableArrayList(); // Observable list for tasks
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Homepage");
+
+    public Homepage(int width,int height) {
+
 // config for create plan muscle view and start workout
         HBox homebox = new HBox();
         FontIcon plan = new FontIcon(FontAwesomeSolid.BOOK);
@@ -104,11 +101,15 @@ public class Homepage extends Application {
 
 
         changingPanel.setStyle("-fx-background-radius: 25px;-fx-border-style:solid;-fx-background-color:white;");
-        changingPanel.setPrefSize(480,500);
+        changingPanel.setPrefSize((double) width /2, (double) height /2);
+        changingPanel.setPadding(new Insets(10));
+
         // Allow changing panel to grow vertically
         VBox.setVgrow(changingPanel,Priority.ALWAYS);
 
         changingPanel.getChildren().add(new WorkoutPlanCreator());
+        changingPanel.setAlignment(Pos.CENTER_LEFT);
+
         createPlan.setOnAction(e -> {
             WorkoutPlanCreator exCreator = new WorkoutPlanCreator();
             changingPanel.getChildren().clear();
@@ -141,14 +142,14 @@ public class Homepage extends Application {
 
 
             changingPanel.getChildren().clear();
-            changingPanel.setStyle("-fx-background-radius: 25px;-fx-border-style:solid;-fx-background-color:black;");
+            changingPanel.setStyle("-fx-background-radius: 25px;-fx-border-style:solid;-fx-background-color:white;");
             changingPanel.getChildren().add(muscleView);
         });
 
 
         // Main panel configuration
-        mainPanel.setPadding(new Insets(20));
-        mainPanel.setHgap(20);
+
+
 
 
 
@@ -162,16 +163,14 @@ public class Homepage extends Application {
         mainPanel.add(changingPanel, 0, 0);
         mainPanel.add(homebox, 0, 2);
         mainPanel.add(line,0,3);
+        mainPanel.setAlignment(Pos.CENTER);
         // Combine panels into a VBox
         VBox root = new VBox();
         root.getChildren().addAll(topPanel, mainPanel);
         root.setBackground(Background.fill(Color.BLACK));
-
-
-        Scene scene = new Scene(root,498, 1080);
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
-        primaryStage.show();
+getChildren().add(root);
+setPrefSize(width,height);
+setAlignment(Pos.CENTER);
 
     }
 }

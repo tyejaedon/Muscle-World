@@ -19,8 +19,8 @@ public class ExerciseIcon {
         // Load the image from resources
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/muscleflex/muscleflex/" + iconName + ".png")));
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(24); // Adjust width as needed
-        imageView.setFitHeight(24); // Adjust height as needed
+        imageView.setFitWidth(100); // Adjust width as needed
+        imageView.setFitHeight(100); // Adjust height as needed
         return imageView;
     }
 

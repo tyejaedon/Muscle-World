@@ -96,7 +96,7 @@ public class MuscleView extends VBox {
         pane.setAlignment(Pos.CENTER);
 
         getChildren().add(pane);
-        setSpacing(10);
+       setSpacing(20);
 
         // Create fade transitions
         infoTextFadeIn = new FadeTransition(Duration.millis(2000), infoText);
@@ -117,8 +117,13 @@ public class MuscleView extends VBox {
 
     }
 
-    private Circle createMuscleArea(double x, double y, double radius, String muscleGroup) {
-        Circle circle = new Circle(x, y, radius);
+    private Circle createMuscleArea(double xRatio, double yRatio, double radiusRatio, String muscleGroup) {
+        // Calculate the actual position and radius based on image size
+        double centerX = xRatio * bodyImageView.getFitWidth() / 440; // 440 is the original width of the image
+        double centerY = yRatio * bodyImageView.getFitHeight() / 250; // 250 is the original height of the image
+        double radius = radiusRatio * Math.min(bodyImageView.getFitWidth(), bodyImageView.getFitHeight()) / 440; // Adjust radius proportionally
+
+        Circle circle = new Circle(centerX, centerY, radius);
         circle.setFill(Color.TRANSPARENT);
         circle.setStroke(Color.RED);
 
@@ -127,6 +132,7 @@ public class MuscleView extends VBox {
 
         return circle;
     }
+
 
     private void showMuscleGif(String muscleGroup, double x, double y) {
         String gifPath = muscleGifsMap.get(muscleGroup);
