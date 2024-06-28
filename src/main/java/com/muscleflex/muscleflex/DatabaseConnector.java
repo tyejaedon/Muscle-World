@@ -399,6 +399,7 @@ public class DatabaseConnector {
 
 
 
+
     public HashMap<String, List<String>> getAllExercises() {
         HashMap<String, List<String>> exercises = new HashMap<>();
         List<String> muscleGroups = getAllTargetMuscles();

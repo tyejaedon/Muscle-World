@@ -59,7 +59,6 @@ public class Homepage extends VBox {
         muscle.setPrefSize(150,80);
         homebox.getChildren().addAll(muscle);
 
-
         FontIcon letsgo = new FontIcon(FontAwesomeSolid.DUMBBELL);
         letsgo.setIconSize(40);
         letsgo.setIconColor(Color.WHITE);
@@ -70,10 +69,10 @@ public class Homepage extends VBox {
         homebox.getChildren().addAll(startWorkout);
         homebox.setAlignment(Pos.CENTER);
         homebox.setSpacing(10);
-        homebox.setPadding(new Insets(70,0,0,0));
+        homebox.setPadding(new Insets(70,0,10,0));
         Line line = new Line();
         line.setStartX(0);
-        line.setEndX(448);
+        line.setEndX(width-100);
 
         line.setStroke(Color.GOLD);
         line.setStrokeWidth(5);
@@ -85,7 +84,7 @@ public class Homepage extends VBox {
 
         for (Button button : new Button[]{workoutButton, userProfileButton, dashboardButton}) {
             button.setStyle("-fx-background-color: gold; -fx-text-fill: black; -fx-font-weight: bold;");
-            button.setPrefSize(150, 30);
+            button.setPrefSize((double) width /2, 30);
             topPanel.getChildren().add(button);
             topPanel.setAlignment(Pos.CENTER);
         }
@@ -105,7 +104,7 @@ public class Homepage extends VBox {
         changingPanel.setPadding(new Insets(10));
 
         // Allow changing panel to grow vertically
-        VBox.setVgrow(changingPanel,Priority.ALWAYS);
+
 
         changingPanel.getChildren().add(new WorkoutPlanCreator());
         changingPanel.setAlignment(Pos.CENTER_LEFT);
@@ -129,7 +128,12 @@ public class Homepage extends VBox {
         dashboardButton.setOnAction(e -> {
             changingPanel.getChildren().clear();
             homebox.getChildren().clear();
-            Dashboard dashboard = new Dashboard();
+            Dashboard dashboard = null;
+            try {
+                dashboard = new Dashboard();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
 
 
             homebox.getChildren().add(dashboard.exerciseSelection());
