@@ -11,6 +11,7 @@ module com.muscleflex.muscleflex {
     requires java.sql;
     requires fontawesomefx;
     requires org.kordamp.ikonli.fontawesome5;
+    requires mysql.connector.java;
 
     opens com.muscleflex.muscleflex to javafx.fxml;
     exports com.muscleflex.muscleflex;
