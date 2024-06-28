@@ -1,19 +1,24 @@
 package com.muscleflex.muscleflex;
 
+import eu.hansolo.tilesfx.tools.DataPoint;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.scene.chart.LineChart;
+
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class Dashboard extends HBox {
 
@@ -21,48 +26,34 @@ public class Dashboard extends HBox {
 
 
     private LineChart<Number, Number> exerciseChart;
-    XYChart.Series<Number, Number> weight;
+    XYChart.Series<Number, Number> weight = new XYChart.Series<>();;
     LineChart<Number,Number> weightChart;
 
     List<Map<String, Object>> userMuscleData;
     List<Map<String, Object>> userExerciseData;
     private ComboBox<String> bodyPartComboBox = new ComboBox<>();
-    private Map<String, Map<String, XYChart.Series<Number, Number>>>  exerciseData = new HashMap<>();
+    LineChart<Number,Number> exerciseData;
     private ComboBox<String>  WorkoutPlans = new ComboBox<>();
     private ComboBox<String> exerciseComboBox = new ComboBox<>();
     DatabaseConnector db= DatabaseConnector.getInstance();
     public Dashboard() {
         updateCombox(null);
-        initializeData();
-
+        exerciseComboBox.setOnAction(e->{
+            updateChart();
+        });
         initializeUI();
 
     }
 
-    private void initializeData() {
-        exerciseChart  =createLineChart("Exercise Chart", "Weight", 31, 0);
-        // Initialize ComboBoxes
 
-        // Initalizing chart
-
-
-        //weight chart demo:
-        weight = new XYChart.Series<>();
-        weight.setName("Weight & BMI");
-        weight.getData().add(new XYChart.Data<>(1, 80));
-        weight.getData().add(new XYChart.Data<>(2, 85));
-        weight.getData().add(new XYChart.Data<>(3, 87));
-
-
-
-
-
-
-
-    }
 
     private void initializeUI() {
-   weightChart = createLineChart("Weight & BMI","Weight",31,0);
+        NumberAxis xAxis = new NumberAxis();
+        xAxis.setLabel("Days");
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Weight");
+        exerciseChart = createLineChart("hello", "world");
+   weightChart = createLineChart("Weight & BMI","Weight");
         WorkoutPlans.setOnAction(e->{
             updateCombox(e);
         });
@@ -72,9 +63,7 @@ public class Dashboard extends HBox {
             updateCombox(e);
         });
 
-        exerciseComboBox.setOnAction(e->{
-            updateChart();
-        });
+
 
 
 
@@ -90,7 +79,7 @@ public class Dashboard extends HBox {
 
         // Tab for strength exercises
         Tab strengthTab = new Tab("Strength");
-        ScrollPane strengthScrollPane = new ScrollPane(exerciseChart);
+        ScrollPane strengthScrollPane = new ScrollPane(updateChart());
         strengthScrollPane.setFitToHeight(false);
         strengthScrollPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/muscleflex/muscleflex/scrollpane.css")).toExternalForm());
         strengthTab.setContent(strengthScrollPane);
@@ -256,32 +245,62 @@ private  LineChart<Number,Number> updateWeightChart(){
     weightChart.getStylesheets().add(cssPath);
     return weightChart;
     }
+    Month dateMonth;
 
-    private void updateChart() {
+
+    private LineChart<Number,Number> updateChart() {
+        exerciseChart.getData().clear();
         String selectedPlan = WorkoutPlans.getSelectionModel().getSelectedItem();
         String selectedBodyPart = bodyPartComboBox.getSelectionModel().getSelectedItem();
         String selectedExercise = exerciseComboBox.getSelectionModel().getSelectedItem();
-        List<Map<String, Object>> graphData = db.getWorkoutData(db.getLoggedUser(),selectedPlan);
+        List<Map<String, Object>> graphData = db.getWorkoutData(db.getLoggedUser(),selectedPlan,selectedBodyPart,selectedExercise);
+        XYChart.Series<Number, Number> series= new XYChart.Series<>();
+
+
+
+        // Clear existing chart data and potentially reset axes
+
+
+        series.setName(selectedExercise);
         graphData.forEach(k->{
+                int y = (int) k.get("weight");
+
+                Object date = k.get("exercise_date");
+               //part for getting the date
+            //
+
+            // Parse the date string into a LocalDate instance
+            LocalDate localDate = LocalDate.parse(date.toString(), DateTimeFormatter.ISO_DATE);
+
+            // Get the DayOfWeek enum value (MONDAY, TUESDAY, ..., SUNDAY)
+           dateMonth = localDate.getMonth();
+            int dayOfWeek = localDate.getDayOfMonth();
+            System.out.println(y);
+
+            series.getData().addAll(new XYChart.Data<>(dayOfWeek,y));
+
 
         });
-        if (selectedBodyPart != null && selectedExercise != null) {
+
+
+
             // Clear existing data from the chart
-            if (!exerciseChart.getData().isEmpty()){
-                exerciseChart.getData().clear();
-            }
 
 
 
-            XYChart.Series<Number, Number> series = exerciseData.get(selectedBodyPart).get(selectedExercise);
 
             if (series != null && !series.getData().isEmpty()) {
-                exerciseChart.getData().clear();
+
+
                 // Find the maximum X and minimum Y values in the series
                 // Find the maximum X and minimum Y values in the series
                 double maxX = series.getData().stream()
                         .mapToDouble(data -> data.getXValue().doubleValue())
                         .max()
+                        .orElse(0);
+                double minX = series.getData().stream()
+                        .mapToDouble(data -> data.getXValue().doubleValue())
+                        .min()
                         .orElse(0);
                 double minY = series.getData().stream()
                         .mapToDouble(data -> data.getYValue().doubleValue())
@@ -293,17 +312,25 @@ private  LineChart<Number,Number> updateWeightChart(){
                         .orElse(0);
 
                 // Update the bounds of the existing chart's axes
-                NumberAxis xAxis = (NumberAxis) exerciseChart.getXAxis();
-                NumberAxis yAxis = (NumberAxis) exerciseChart.getYAxis();
+
+                System.out.println(maxX);
+
+
+
+                NumberAxis xAxis =(NumberAxis) exerciseChart.getXAxis() ;
+                NumberAxis yAxis = (NumberAxis) exerciseChart.getYAxis() ;
                 xAxis.setUpperBound(Math.min(maxX+1,31));
-                xAxis.setLowerBound(1);
+                xAxis.setLowerBound(minX);
                 yAxis.setLowerBound(minY);
                 yAxis.setUpperBound(maxy+5);
-
+                yAxis.setTickUnit(2);
 
 
                 // Add the series to the chart
                 exerciseChart.getData().add(series);
+                exerciseChart.setTitle(selectedExercise);
+                exerciseChart.setPrefWidth(550);
+                exerciseChart.setCreateSymbols(true);
                 String cssPath = getClass().getResource("/com/muscleflex/muscleflex/gymgraph.css").toExternalForm();
                 if (cssPath != null) {
                     exerciseChart.getStylesheets().add(cssPath);
@@ -315,28 +342,27 @@ private  LineChart<Number,Number> updateWeightChart(){
                         Tooltip tooltip = new Tooltip("Day: " + dataPoint.getXValue() + "\nWeight: " + dataPoint.getYValue() + " kg");
                         Tooltip.install(dataPoint.getNode(), tooltip);
                     }
-                }
+
             }
 
         }
+            return exerciseChart;
     }
 
-    private LineChart<Number, Number> createLineChart(String title, String yAxisLabel, double upperBound, double lowerBound) {
+    private LineChart<Number, Number> createLineChart(String title, String yAxisLabel) {
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabel("Days");
         xAxis.setAutoRanging(false);
         xAxis.setTickUnit(1);
-        xAxis.setUpperBound(upperBound);
+
 
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel(yAxisLabel);
         yAxis.setAutoRanging(false);
-        yAxis.setLowerBound(lowerBound);
+     ;
 
         LineChart<Number, Number> chart = new LineChart<>(xAxis, yAxis);
-        chart.setTitle(title);
-        chart.setPrefWidth(550);
-        chart.setCreateSymbols(true);
+
 
         return chart;
     }

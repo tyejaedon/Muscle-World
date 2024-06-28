@@ -280,8 +280,9 @@ public class DatabaseConnector {
                 exerciseData.put("exercise_date", rs.getDate("exercise_date").toString());
                 exerciseData.put("exercise_name", rs.getString("exercise_name"));
                 exerciseData.put("target_muscle", rs.getString("target_muscle"));
-                exerciseData.put("duration", rs.getInt("duration"));
-                exerciseData.put("sets", rs.getInt("sets"));
+                exerciseData.put("duration", rs.getTime("duration").toString());
+                exerciseData.put("reps", rs.getInt("reps"));
+                exerciseData.put("weight", rs.getInt("Weight"));
                 if ( rs.getTime("rest_period") == null){
                     exerciseData.put("rest_period","N/A");
                 }else {
@@ -324,8 +325,58 @@ public class DatabaseConnector {
                 exerciseData.put("exercise_date", rs.getDate("exercise_date").toString());
                 exerciseData.put("exercise_name", rs.getString("exercise_name"));
                 exerciseData.put("target_muscle", rs.getString("target_muscle"));
-                exerciseData.put("duration", rs.getInt("duration"));
-                exerciseData.put("sets", rs.getInt("sets"));
+                exerciseData.put("duration", rs.getTime("duration").toString());
+                exerciseData.put("reps", rs.getInt("reps"));
+                exerciseData.put("weight", rs.getInt("Weight"));
+
+                if ( rs.getTime("rest_period") == null){
+                    exerciseData.put("rest_period","N/A");
+                }else {
+                    exerciseData.put("rest_period", rs.getTime("rest_period").toString());
+                }
+
+
+                exerciseDataList.add(exerciseData);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return exerciseDataList;
+    }
+
+    public List<Map<String, Object>> getWorkoutData(String username, String plan_name,String muscle,String exercise) {
+        List<Map<String, Object>> exerciseDataList = new ArrayList<>();
+
+        try {
+            // Query to retrieve exercise data based on username
+            String query = "SELECT ed.*, e.exercise_name, e.muscle_group " +
+                    "FROM exercise_data ed " +
+                    "JOIN exercises e ON ed.exercise_id = e.exercise_id " +
+                    "JOIN workout_plans wp ON e.plan_id = wp.plan_id " +
+                    "JOIN users u ON wp.username = u.username " +
+                    "WHERE u.username = ? AND wp.plan_name = ? AND ed.target_muscle = ? AND ed.exercise_name = ?";
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+            stmt.setString(2,plan_name);
+            stmt.setString(3,muscle);
+            stmt.setString(4,exercise);
+            ResultSet rs = stmt.executeQuery();
+
+            // Loop through result set to fetch exercise data
+            while (rs.next()) {
+                Map<String, Object> exerciseData = new HashMap<>();
+                exerciseData.put("exercise_date", rs.getDate("exercise_date").toString());
+                exerciseData.put("exercise_name", rs.getString("exercise_name"));
+                exerciseData.put("target_muscle", rs.getString("target_muscle"));
+                exerciseData.put("duration", rs.getTime("duration").toString());
+                exerciseData.put("reps", rs.getInt("reps"));
+                exerciseData.put("weight", rs.getInt("Weight"));
+
                 if ( rs.getTime("rest_period") == null){
                     exerciseData.put("rest_period","N/A");
                 }else {
@@ -376,6 +427,8 @@ public class DatabaseConnector {
 
         return exercises;
     }
+
+
 
     public List<String> getAllTargetMuscles() {
         List<String> targetMuscles = new ArrayList<>();
