@@ -27,7 +27,7 @@ public class MuscleView extends VBox {
     FadeTransition infoTextFadeOut;
     FadeTransition gifFadeIn;
     FadeTransition gifFadeOut;
-    public MuscleView() {
+    public MuscleView(double width, double height) {
         // Load the human body image
         Image bodyImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/muscleflex/muscleflex/anatomy.jpeg")));
         // Ensure body image fits within 500x500
@@ -39,8 +39,8 @@ public class MuscleView extends VBox {
         double fitHeight = Math.min(maxHeight, bodyImage.getHeight());
      pane= new StackPane();
         bodyImageView = new ImageView(bodyImage);
-        bodyImageView.setFitWidth(fitWidth);
-        bodyImageView.setFitHeight(fitHeight);
+        bodyImageView.setFitWidth(width);
+        bodyImageView.setFitHeight(height/2);
 
         // Create rounded rectangle as a clipping mask
         Rectangle clip = new Rectangle(bodyImageView.getFitWidth(), bodyImageView.getFitHeight());
@@ -90,7 +90,7 @@ public class MuscleView extends VBox {
         // Main layout
         getChildren().addAll(imagePane);
         setSpacing(5);
-        pane.setPrefSize(440, 250);
+        pane.setPrefSize(width, height/2);
         pane.setStyle("-fx-background-color: #333; -fx-background-radius: 25px;");
         pane.getChildren().add(gifImageView);
         pane.setAlignment(Pos.CENTER);
@@ -114,7 +114,7 @@ public class MuscleView extends VBox {
         gifFadeOut = new FadeTransition(Duration.millis(3000), gifImageView);
         gifFadeOut.setFromValue(1.0);
         gifFadeOut.setToValue(0.0);
-
+        
     }
 
     private Circle createMuscleArea(double xRatio, double yRatio, double radiusRatio, String muscleGroup) {

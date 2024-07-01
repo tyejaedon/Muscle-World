@@ -87,7 +87,7 @@ public class DatabaseConnector {
         boolean success = false;
         try {
             // Insert into workout_plans
-            String sql1 = "INSERT INTO workout_plans (username, plan_name, target, end_date) VALUES (?, ?, ?, ?)";
+            String sql1 = "INSERT INTO workout_plan (username, plan_name, target, end_date) VALUES (?, ?, ?, ?)";
             try (PreparedStatement pStmt1 = conn.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS)) {
                 java.sql.Date sqlDate =  java.sql.Date.valueOf((date));
                 pStmt1.setString(1, getLoggedUser());
@@ -126,7 +126,7 @@ public class DatabaseConnector {
 
     public List<String> getUserWorkoutPlans() {
         List<String> plans = new ArrayList<>();
-        String sql = "SELECT plan_name FROM workout_plans WHERE username = ?";
+        String sql = "SELECT plan_name FROM workout_plan WHERE username = ?";
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, user_logged[0]);
             rs = preparedStatement.executeQuery();
@@ -211,7 +211,7 @@ public class DatabaseConnector {
             // Query to retrieve user details and workout plans
             String query = "SELECT u.*, wp.plan_id, wp.plan_name, wp.target, wp.end_date " +
                     "FROM users u " +
-                    "LEFT JOIN workout_plans wp ON u.username = wp.username " +
+                    "LEFT JOIN workout_plan wp ON u.username = wp.username " +
                     "WHERE u.username = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, username);
@@ -266,7 +266,7 @@ public class DatabaseConnector {
             String query = "SELECT ed.*, e.muscle_group " +
                     "FROM exercise_data ed " +
                     "JOIN exercises e ON ed.exercise_id = e.exercise_id " +
-                    "JOIN workout_plans wp ON e.plan_id = wp.plan_id " +
+                    "JOIN workout_plan wp ON e.plan_id = wp.plan_id " +
                     "JOIN users u ON wp.username = u.username " +
                     "WHERE u.username = ? AND wp.plan_name = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -309,7 +309,7 @@ public class DatabaseConnector {
             String query = "SELECT ed.*, e.exercise_name, e.muscle_group " +
                     "FROM exercise_data ed " +
                     "JOIN exercises e ON ed.exercise_id = e.exercise_id " +
-                    "JOIN workout_plans wp ON e.plan_id = wp.plan_id " +
+                    "JOIN workout_plan wp ON e.plan_id = wp.plan_id " +
                     "JOIN users u ON wp.username = u.username " +
                     "WHERE u.username = ? AND wp.plan_name = ? AND ed.target_muscle = ?";
 
@@ -356,7 +356,7 @@ public class DatabaseConnector {
             String query = "SELECT ed.*, e.exercise_name, e.muscle_group " +
                     "FROM exercise_data ed " +
                     "JOIN exercises e ON ed.exercise_id = e.exercise_id " +
-                    "JOIN workout_plans wp ON e.plan_id = wp.plan_id " +
+                    "JOIN workout_plan wp ON e.plan_id = wp.plan_id " +
                     "JOIN users u ON wp.username = u.username " +
                     "WHERE u.username = ? AND wp.plan_name = ? AND ed.target_muscle = ? AND ed.exercise_name = ?";
 

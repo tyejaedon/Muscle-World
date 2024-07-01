@@ -1,0 +1,13 @@
+exercise_id,exercise_name,muscle_group,plan_id
+1,Squats,Legs,2
+2,"Bench Press",Chest,2
+3,Deadlifts,Legs,2
+4,Running,Cardio,1
+5,Yoga,Flexibility,1
+6,Plank,Core,2
+14,"Push Up",Chest,2
+15,"Pull Up",Back,2
+16,Squat,Legs,2
+17,"Bicep Curl",Arms,2
+18,"Tricep Dip",Arms,2
+19,Lunge,Legs,2

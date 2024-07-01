@@ -141,7 +141,7 @@ public class Homepage extends VBox {
             changingPanel.getChildren().add(dashboard);
         });
         muscle.setOnAction(e -> {
-            MuscleView muscleView = new MuscleView();
+            MuscleView muscleView = new MuscleView((double) width /2, (double) height /2);
 
 
 
