@@ -1,13 +1,5 @@
-exercise_id,exercise_name,muscle_group,plan_id
-1,Squats,Legs,2
-2,"Bench Press",Chest,2
-3,Deadlifts,Legs,2
-4,Running,Cardio,1
-5,Yoga,Flexibility,1
-6,Plank,Core,2
-14,"Push Up",Chest,2
-15,"Pull Up",Back,2
-16,Squat,Legs,2
-17,"Bicep Curl",Arms,2
-18,"Tricep Dip",Arms,2
-19,Lunge,Legs,2
+"user_id";"username";"email";"full_name";"password";"age";"weight";"height";"gender";"registration_date"
+1;"Diacon14";"jaedon@gmail.com";"jaedon munyua";"12345678";20;80.0;195.0;"Male";"2024-07-01 12:15:42"
+2;"john_doe";"john.doe@example.com";"John Doe";"password123";25;70.5;175.0;"Male";"2024-07-01 12:48:43"
+3;"jane_smith";"jane.smith@example.com";"Jane Smith";"securepassword";30;60.0;165.0;"Female";"2024-07-01 12:48:43"
+4;"alex_jones";"alex.jones@example.com";"Alex Jones";"mysecretpass";28;80.0;180.0;"Male";"2024-07-01 12:48:43"

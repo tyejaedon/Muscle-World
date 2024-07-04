@@ -31,12 +31,10 @@ public class MuscleView extends VBox {
         // Load the human body image
         Image bodyImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/muscleflex/muscleflex/anatomy.jpeg")));
         // Ensure body image fits within 500x500
-        double maxWidth = 440;
-        double maxHeight = 250;
+
 
         // Calculate scaled width and height maintaining aspect ratio
-        double fitWidth = Math.min(maxWidth, bodyImage.getWidth());
-        double fitHeight = Math.min(maxHeight, bodyImage.getHeight());
+
      pane= new StackPane();
         bodyImageView = new ImageView(bodyImage);
         bodyImageView.setFitWidth(width);
@@ -114,7 +112,7 @@ public class MuscleView extends VBox {
         gifFadeOut = new FadeTransition(Duration.millis(3000), gifImageView);
         gifFadeOut.setFromValue(1.0);
         gifFadeOut.setToValue(0.0);
-        
+
     }
 
     private Circle createMuscleArea(double xRatio, double yRatio, double radiusRatio, String muscleGroup) {

@@ -1,6 +1,5 @@
 package com.muscleflex.muscleflex;
 
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,12 +7,11 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Box;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
 
 import java.util.Objects;
 
@@ -109,9 +107,6 @@ if (registered) {
     alert.showAndWait();
 
     // Close registration window and open login window
-LoginApp loginApp =  LoginApp.getInstance();
-loginApp.mainLayout.getChildren().clear();
-loginApp.mainLayout.getChildren().addAll(loginApp.welcomeLabel,loginApp.loginBox,loginApp.buttonBox);
 
 } }else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -126,12 +121,22 @@ loginApp.mainLayout.getChildren().addAll(loginApp.welcomeLabel,loginApp.loginBox
         Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/muscleflex/muscleflex/refer.png")));
 
         ImageView home = new ImageView(image);
+
      home.setFitWidth(120);
      home.setFitHeight(120);
      HBox box = new HBox();
      box.getChildren().add(home);
      box.setAlignment(Pos.CENTER);
+        box.addEventHandler(MouseEvent.MOUSE_CLICKED,e->{
 
+
+            Login login = Login.getInstance(width,Height);
+
+
+
+
+
+        });
         // Adding elements to the grid
         grid.getChildren().addAll(welcome, submitButton);
 

@@ -1,13 +1,21 @@
-exercise_id,exercise_name,muscle_group,plan_id
-1,Squats,Legs,2
-2,"Bench Press",Chest,2
-3,Deadlifts,Legs,2
-4,Running,Cardio,1
-5,Yoga,Flexibility,1
-6,Plank,Core,2
-14,"Push Up",Chest,2
-15,"Pull Up",Back,2
-16,Squat,Legs,2
-17,"Bicep Curl",Arms,2
-18,"Tricep Dip",Arms,2
-19,Lunge,Legs,2
+"id";"exerciseName";"targetMuscle"
+1;"Bench Press";"Chest"
+2;"Squat";"Legs"
+3;"Deadlift";"Back"
+4;"Shoulder Press";"Shoulders"
+5;"Bicep Curl";"Arms"
+6;"Tricep Extension";"Arms"
+7;"Pull Up";"Back"
+8;"Lat Pulldown";"Back"
+9;"Leg Press";"Legs"
+10;"Leg Curl";"Legs"
+11;"Calf Raise";"Legs"
+12;"Chest Fly";"Chest"
+13;"Dumbbell Row";"Back"
+14;"Lateral Raise";"Shoulders"
+15;"Front Raise";"Shoulders"
+16;"Hammer Curl";"Arms"
+17;"Overhead Tricep Extension";"Arms"
+18;"Crunch";"Abs"
+19;"Russian Twist";"Abs"
+20;"Plank";"Abs"

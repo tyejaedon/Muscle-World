@@ -1,3 +1,5 @@
-plan_id,username,plan_name,target,end_date
-1,jane_smith,"Cardio and Flexibility",Cardio,2024-12-31
-2,john_doe,"Beginner Strength Training",Strength,2024-12-31
+"plan_id";"username";"plan_name";"target";"end_date"
+1;"";"Beginner Full Body Workout";"Full Body";"2024-07-15"
+1;"john_doe";"Beginner Strength Training";"Strength";"2024-12-31"
+2;"john_doe";"Beginner Strength Training";"Strength";"2024-12-31"
+3;"jane_smith";"Cardio and Flexibility";"Cardio";"2024-12-31"
