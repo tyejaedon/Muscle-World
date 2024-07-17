@@ -1,52 +1,30 @@
 package com.muscleflex.muscleflex;
 
-
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
-public class LoginApp extends Application {
+public class Login extends VBox {
 
-    private static LoginApp instance;
+    private static Login instance;  // Step 1: Add a private static instance variable
 
     private TextField usernameField = new TextField();
     private PasswordField passwordField = new PasswordField();
     protected Label welcomeLabel = new Label("Welcome to Muscle Flex");
-    VBox mainLayout;
+
     HBox loginBox;
     HBox buttonBox;
     VBox Box;
     int width;
     int height;
-    // Private constructor to prevent instantiation
-    public LoginApp() {
 
-    }
-
-    // Public method to provide access to the single instance
-    public static synchronized LoginApp getInstance() {
-        if (instance == null) {
-            instance = new LoginApp();
-        }
-        return instance;
-    }
-    // Method to launch the JavaFX application
-    public static void launchApp(String[] args) {
-        if (instance == null) {
-            instance = new LoginApp();
-            Application.launch(LoginApp.class, args);
-        }
-    }
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Login");
-
+    // Step 2: Make the constructor private to prevent instantiation
+    private Login(int width, int height) {
+        this.width = width;
+        this.height = height;
         // Welcome label styling
         welcomeLabel.setFont(new Font("Arial", 30));
         welcomeLabel.setTextFill(Color.RED);
@@ -79,10 +57,7 @@ public class LoginApp extends Application {
         Button registerButton = new Button("Register");
         registerButton.setFont(new Font("SansSerif", 18));
         registerButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
-        registerButton.setOnAction(e -> {
-
-            handleRegister();
-        });
+        registerButton.setOnAction(e -> handleRegister());
 
         // Layouts
         VBox labelBox = new VBox(20, loginLabel, passwordLabel);
@@ -91,24 +66,25 @@ public class LoginApp extends Application {
         VBox fieldBox = new VBox(20, usernameField, passwordField);
         fieldBox.setAlignment(Pos.CENTER_LEFT);
 
-         loginBox = new HBox(20, labelBox, fieldBox);
+        loginBox = new HBox(20, labelBox, fieldBox);
         loginBox.setAlignment(Pos.CENTER);
 
-         buttonBox = new HBox(20, signInButton, registerButton);
+        buttonBox = new HBox(20, signInButton, registerButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setPadding(new Insets(20));
-       Box=  new VBox(30, welcomeLabel, loginBox, buttonBox);
-        mainLayout =Box;
-        mainLayout.setAlignment(Pos.CENTER);
-        mainLayout.setPadding(new Insets(40));
-        mainLayout.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-        width = 700;
-        height = 900;
-        Scene scene = new Scene(mainLayout, width, height);
+        getChildren().addAll(welcomeLabel, loginBox, buttonBox);
 
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        primaryStage.setResizable(false);
+        setAlignment(Pos.CENTER);
+        setPadding(new Insets(40));
+        setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+    }
+
+    // Step 3: Provide a public static method to return the single instance
+    public static Login getInstance(int width, int height) {
+        if (instance == null) {
+            instance = new Login(width, height);
+        }
+        return instance;
     }
 
     private void handleLogin() {
@@ -123,11 +99,8 @@ public class LoginApp extends Application {
             alert.setHeaderText(null);
             alert.setContentText("Login successful!");
             alert.showAndWait();
-            mainLayout.getChildren().clear();
-            mainLayout.getChildren().add(new Homepage(width,height));
-
-
-
+            getChildren().clear();
+            getChildren().add(new Homepage(width, height));
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Login");
@@ -138,17 +111,8 @@ public class LoginApp extends Application {
     }
 
     private void handleRegister() {
-       Registration registration = new Registration(width,height);
-        mainLayout.getChildren().clear();
-        mainLayout.getChildren().add(registration);
-
-
-    }
-
-    public static void main(String[] args) {
-
-            launchApp(args);
-
+        Registration registration = new Registration(width, height);
+        getChildren().clear();
+       getChildren().add(registration);
     }
 }
-

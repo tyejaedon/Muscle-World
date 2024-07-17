@@ -119,6 +119,7 @@ public class Dashboard extends HBox {
 
         // Link to the external stylesheet
         String stylesheet = Objects.requireNonNull(getClass().getResource("/com/muscleflex/muscleflex/dashboard.css")).toExternalForm();
+
         tabPane.getStylesheets().add(stylesheet);
 
         // Add components to the HBox

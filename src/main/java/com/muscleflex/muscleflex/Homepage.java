@@ -112,7 +112,7 @@ public class Homepage extends VBox {
         createPlan.setOnAction(e -> {
             WorkoutPlanCreator exCreator = new WorkoutPlanCreator();
             changingPanel.getChildren().clear();
-            changingPanel.setBackground(Background.fill(Color.GREY));
+
             changingPanel.setStyle("-fx-background-radius: 25px;-fx-border-style:solid;-fx-background-color:white;");
 
             changingPanel.getChildren().add(exCreator);
