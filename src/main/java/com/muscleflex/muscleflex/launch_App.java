@@ -12,9 +12,9 @@ public class launch_App extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Login");
-    int width = 500;
+    int width = 900;
     int height = 700;
-        Login login = Login.getInstance(width,height);
+        Login login = new Login(width,height);
 
        scene = new Scene(switchtoview(login), width, height);
 
