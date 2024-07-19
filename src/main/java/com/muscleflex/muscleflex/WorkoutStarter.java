@@ -7,8 +7,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -26,7 +24,6 @@ public class WorkoutStarter extends Application {
     private boolean isPaused = false;
     private boolean isRunning = false;
     private Task<Void> currentTask;
-    private Thread currentThread;
     private int remainingTime;
 
     public static void main(String[] args) {
@@ -171,7 +168,7 @@ public class WorkoutStarter extends Application {
 
     private void runTimer(int timeInSeconds) {
         remainingTime = timeInSeconds;
-        currentTask = new Task<Void>() {
+        currentTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
                 for (int i = remainingTime; i >= 0; i--) {
@@ -186,9 +183,7 @@ public class WorkoutStarter extends Application {
             }
         };
 
-        currentTask.messageProperty().addListener((obs, oldMessage, newMessage) -> {
-            timerLabel.setText(newMessage);
-        });
+        currentTask.messageProperty().addListener((obs, oldMessage, newMessage) -> timerLabel.setText(newMessage));
 
         currentTask.setOnSucceeded(e -> {
             currentExerciseIndex++;
@@ -200,7 +195,7 @@ public class WorkoutStarter extends Application {
             }
         });
 
-        currentThread = new Thread(currentTask);
+        Thread currentThread = new Thread(currentTask);
         currentThread.setDaemon(true);
         currentThread.start();
     }
