@@ -4,51 +4,43 @@ import eu.hansolo.tilesfx.tools.DataPoint;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Dashboard extends HBox {
 
-
-
-
     private LineChart<Number, Number> exerciseChart;
-    XYChart.Series<Number, Number> weight = new XYChart.Series<>();;
-    LineChart<Number,Number> weightChart;
-
+    XYChart.Series<Number, Number> weight = new XYChart.Series<>();
+    LineChart<Number, Number> weightChart;
     List<Map<String, Object>> userMuscleData;
     List<Map<String, Object>> userExerciseData;
     List<Map<String, Object>> tooltipdata;
     List<Map<String, Object>> monthData;
     private ComboBox<String> bodyPartComboBox = new ComboBox<>();
     private ComboBox<String> monthComboBox = new ComboBox<>();
-    LineChart<Number,Number> exerciseData;
-    private ComboBox<String>  WorkoutPlans = new ComboBox<>();
+    LineChart<Number, Number> exerciseData;
+    private ComboBox<String> WorkoutPlans = new ComboBox<>();
     private ComboBox<String> exerciseComboBox = new ComboBox<>();
-    DatabaseConnector db= DatabaseConnector.getInstance();
-    public Dashboard() throws Exception {
+    DatabaseConnector db = DatabaseConnector.getInstance();
+double width;
+double height;
+    private Dashboard(double  width, double height) throws Exception {
+    this.width = width;
+    this.height = height;
+        setPrefSize(width, height);
         updateCombox(null);
-        monthComboBox.setOnAction(e->{
-            updateChart();
-        });
+        monthComboBox.setOnAction(e -> updateChart());
         initializeUI();
-
     }
-
-
 
     private void initializeUI() {
         NumberAxis xAxis = new NumberAxis();
@@ -112,7 +104,7 @@ public class Dashboard extends HBox {
 
         // Create and configure the TabPane
         TabPane tabPane = new TabPane();
-        tabPane.setTabMinWidth(100);
+        tabPane.setPrefSize(width, height);
         tabPane.getTabs().addAll(strengthTab,weightTab,workoutTab());
 
 
@@ -487,4 +479,7 @@ public  Tab workoutTab(){
     return workoutTab;
 }
 
+    public static Dashboard createDashboard(double width, double height) throws Exception {
+        return new Dashboard(width, height);
+    }
 }

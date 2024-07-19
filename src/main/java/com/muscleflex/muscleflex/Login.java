@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 public class Login extends VBox {
 
@@ -21,8 +22,10 @@ public class Login extends VBox {
     int width;
     int height;
 
-    // Step 2: Make the constructor private to prevent instantiation
-    private Login(int width, int height) {
+
+
+    public Login(int width, int height) {
+ 
         this.width = width;
         this.height = height;
         // Welcome label styling
@@ -79,13 +82,7 @@ public class Login extends VBox {
         setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
-    // Step 3: Provide a public static method to return the single instance
-    public static Login getInstance(int width, int height) {
-        if (instance == null) {
-            instance = new Login(width, height);
-        }
-        return instance;
-    }
+
 
     private void handleLogin() {
         String username = usernameField.getText();
@@ -112,6 +109,8 @@ public class Login extends VBox {
 
     private void handleRegister() {
         Registration registration = new Registration(width, height);
+        launch_App exApp = new launch_App();
+        exApp.switchtoview(registration);
         getChildren().clear();
        getChildren().add(registration);
     }

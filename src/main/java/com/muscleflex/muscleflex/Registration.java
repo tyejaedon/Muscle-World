@@ -12,15 +12,17 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
 import java.util.Objects;
 
 public class Registration extends VBox {
 
 
-    public  Registration(int width, int Height) {
+ 
 
-
+    public Registration(int width, int Height) {
+         // Add this line
         // Creating the GridPane layout
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20));
@@ -105,8 +107,13 @@ if (registered) {
     alert.setHeaderText(null);
     alert.setContentText("Registration successful!");
     alert.showAndWait();
+     // Switch to login scene
+    launch_App exApp = new launch_App();
+    Login exLogin = new Login(width, Height);
+    exApp.switchtoview(exLogin);
+  
+   
 
-    // Close registration window and open login window
 
 } }else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -124,19 +131,11 @@ if (registered) {
 
      home.setFitWidth(120);
      home.setFitHeight(120);
+   
      HBox box = new HBox();
      box.getChildren().add(home);
      box.setAlignment(Pos.CENTER);
-        box.addEventHandler(MouseEvent.MOUSE_CLICKED,e->{
-
-
-            Login login = Login.getInstance(width,Height);
-
-
-
-
-
-        });
+      
         // Adding elements to the grid
         grid.getChildren().addAll(welcome, submitButton);
 
@@ -146,7 +145,13 @@ if (registered) {
         setPadding(new Insets(10,0,0,0));
         getChildren().add(box);
 
-        setPrefSize(width,Height);
+       
+           // Adding event listener to home ImageView
+           home.setOnMouseClicked((MouseEvent event) -> {
+            launch_App exApp = new launch_App();
+            Login exLogin = new Login(width, Height);
+            exApp.switchtoview(exLogin);
+        });
 
 
     }
