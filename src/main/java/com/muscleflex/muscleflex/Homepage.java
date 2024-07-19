@@ -101,6 +101,14 @@ public class Homepage extends VBox {
             changingPanel.setStyle("-fx-background-radius: 25px;-fx-border-style:solid;-fx-background-color:white;");
             changingPanel.getChildren().add(exCreator);
         });
+        startWorkout.setOnAction(e -> {
+            WorkoutStarter workoutStarter = new WorkoutStarter();
+            workoutStarter.start();
+            changingPanel.getChildren().clear();
+            changingPanel.setStyle("-fx-background-radius: 25px;-fx-border-style:solid;-fx-background-color:white;");
+            changingPanel.getChildren().add(workoutStarter);
+        });
+        
 
         workoutButton.setOnAction(e -> {
             homebox.getChildren().clear();

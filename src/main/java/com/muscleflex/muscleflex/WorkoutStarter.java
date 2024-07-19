@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 import javafx.concurrent.Task;
 
-public class WorkoutStarter extends Application {
+public class WorkoutStarter extends VBox {
 
     private ObservableList<String> workoutList;
     private List<Integer> workoutTimes;
@@ -26,13 +27,11 @@ public class WorkoutStarter extends Application {
     private Task<Void> currentTask;
     private int remainingTime;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+  
 
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Workout Starter");
+   
+    public void start() {
+      
 
         // Initialize workout list
         workoutList = FXCollections.observableArrayList();
@@ -151,9 +150,7 @@ public class WorkoutStarter extends Application {
             }
         });
 
-        Scene scene = new Scene(grid, 600, 400);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+      getChildren().add(grid);
     }
 
     private void startWorkout() {

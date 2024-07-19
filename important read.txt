@@ -1,0 +1,78 @@
+1. Create a MySQL database with the name muscle-world
+2. create the table users using the following MySQL code: 
+CREATE TABLE `users` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `full_name` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  `age` int NOT NULL,
+  `weight` float NOT NULL,
+  `height` float NOT NULL,
+  `gender` enum('Male','Female') NOT NULL,
+  `registration_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+3. Create the table workout_plan using the following MySQL code: 
+CREATE TABLE `workout_plan` (
+  `plan_id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(45) DEFAULT NULL,
+  `plan_name` varchar(45) NOT NULL,
+  `target` varchar(45) DEFAULT NULL,
+  `end_date` date NOT NULL,
+  PRIMARY KEY (`plan_id`,`end_date`),
+  KEY `username_idx` (`username`),
+  CONSTRAINT `username` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+4. Create the table listed exercises using the following MySQL code:
+CREATE TABLE `listed_exercises` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `exerciseName` varchar(255) NOT NULL,
+  `targetMuscle` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `exerciseName_UNIQUE` (`exerciseName`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+5. Create the table exercises using the following MySQL code: 
+CREATE TABLE `exercises` (
+  `exercise_id` int NOT NULL AUTO_INCREMENT,
+  `exercise_name` varchar(45) NOT NULL,
+  `muscle_group` varchar(45) NOT NULL,
+  `plan_id` int DEFAULT NULL,
+  PRIMARY KEY (`exercise_id`),
+  UNIQUE KEY `exercise_name_UNIQUE` (`exercise_name`),
+  KEY `plan_id_idx` (`plan_id`),
+  CONSTRAINT `plan_id` FOREIGN KEY (`plan_id`) REFERENCES `workout_plan` (`plan_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+6. Create the table exercise_data using the following MySQL code: 
+CREATE TABLE `exercise_data` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `exercise_date` date DEFAULT NULL,
+  `target_muscle` varchar(45) DEFAULT NULL,
+  `duration` time DEFAULT NULL,
+  `reps` int DEFAULT NULL,
+  `rest_period` time DEFAULT NULL,
+  `weight` double DEFAULT NULL,
+  `exercise_id` int DEFAULT NULL,
+  `exercise_name` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `exercise_id_idx` (`exercise_id`),
+  CONSTRAINT `exercise_id` FOREIGN KEY (`exercise_id`) REFERENCES `listed_exercises` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+7. import the data of users form the folder database using the the file user.csv 
+8. import the data of workout_plan from the folder database using the file workout_plan.csv
+9. import the data of listed_exercises from the folder database using the file listedexercises.csv
+10. import the data of exercises from the folder database using the file exercises.csv
+11. import the data of exercise_data from the folder database using the file exercises_data.csv
+12. In the class database connector change the values of User and Password to your specific credentials. 
+
+
+
+
+
